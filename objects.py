@@ -48,7 +48,7 @@ class Map:
         for t in self.trees:
             if not t.is_growing:
                 ac = self.get_around_cells(t.position[0], t.position[1])
-                if ac:
+                if t.position[0] < self.max_x:
                     print(ac)
                     if ac[2] == 0:
                         t.position = (t.position[0], t.position[1] + 1)
