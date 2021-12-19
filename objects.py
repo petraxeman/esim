@@ -6,11 +6,23 @@ class Tree:
     def __init__(self, position, dna = 0) -> None:
         self.position = position
         self.dna = dna if dna else DNA()
-        self.cells = [(0, (0,0), 0)]
+        self.cells = []
+        self.seeds = [(0, (0,0), 0)]
+        self.energy = 100
 
         self.is_growing = False
+    def growth_require(self):
+        required_cells = []
+        for seed in self.seeds:
+            gen = dna.get_specific_gen(seed[2])
+    def growth_accept(self):
+        pass
+    def get_cells(self):
+        return self.cells + self.seeds
     def __repr__(self):
         return f'<Tree cords = {self.position}, is_growing = {self.is_growing}>'
+
+
 class DNA:
     def __init__(self, code = None):
         if code is None:
@@ -47,13 +59,16 @@ class Map:
     def tick(self):
         for t in self.trees:
             if not t.is_growing:
-                ac = self.get_around_cells(t.position[0], t.position[1])
-                if t.position[0] < self.max_x:
-                    print(ac)
-                    if ac[2] == 0:
-                        t.position = (t.position[0], t.position[1] + 1)
-                else:
-                    t.is_growing = True
+                self.fall(t)
+            else:
+                pass
+    def draw(self):
+        pass
+    def fall(self, t):
+        if t.position[1] == self.max_y:
+            t.is_growing = True
+        else:
+            t.position = (t.position[0], t.position[1] + 1)
     def get_specific_area(self, min_x, max_x, min_y, max_y):
         specific_area = []
         for row in self.area[min_y:max_y]:
@@ -76,4 +91,6 @@ if __name__ == '__main__':
     for i in range(50):
         map.tick()
         print(map.trees)
+    print(map.trees[0].get_cells())
+    print(map.trees[0].dna.get_specific_gen(0))
     print(map.get_specific_cell(50, 40))
